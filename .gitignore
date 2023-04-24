@@ -1,0 +1,5 @@
+.ipynb_checkpoints/
+__pycache__/
+fashion-mnist/*.gz
+MP2_P1_fashion_mnist.ipynb
+.DS_Store/
