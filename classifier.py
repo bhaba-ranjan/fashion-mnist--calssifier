@@ -10,43 +10,30 @@ class Classifier(nn.Module):
     def __init__(self):
         super(Classifier, self).__init__()
 
-         # dialete convolution
-        
-        self.conv1 = nn.Conv2d(1, 8, 3, dilation= 2)
-        
-        self.conv2 = nn.Conv2d(8, 16, 3, dilation= 3)                
-        
-        self.pool = nn.MaxPool2d(2, 2)
+      
+        # fully connected NN
+        self.fc1 = nn.Linear(28 * 28, 256)
+        self.fc2 = nn.Linear(256, 128)
+        self.fc3 = nn.Linear(128, 56)
+        self.fc4 = nn.Linear(56, NUM_CLASSES)
 
-        self.bn1 = nn.BatchNorm2d(8)        
-        self.bn2 = nn.BatchNorm2d(16)
-        self.bn3 = nn.BatchNorm1d(24)
-        self.bn4 = nn.BatchNorm1d(16)       
-        
-        self.fc1 = nn.Linear(16* 6 * 6, 24)
-        self.fc2 = nn.Linear(24, 16)
-        self.fc3 = nn.Linear(16, NUM_CLASSES)
+        # convolutional NN
+        # self.conv1 = nn.Conv2d(1, 64, 5)
+        # self.conv2 = nn.Conv2d(64, 32, 3)
+        # self.conv3 = nn.Conv2d(32, 16, 3)
+        # self.pool = nn.MaxPool2d(2, 2)
+        # self.fc1 = nn.Linear(16 * 10 * 10, 120)
+        # self.fc2 = nn.Linear(256, 266)
+        # self.fc3 = nn.Linear(256, NUM_CLASSES)
 
 
+      
 
     def forward(self, x):
-
-        x = F.relu(self.conv1(x))                   
-        x = self.pool(x)
-        x = self.bn1(x)        
-        
-        x = F.relu(self.conv2(x))       
-
-        x = self.bn2(x)
-
-        x = x.view(x.shape[0], -1)
-        
+        B = x.shape[0]
+        x = x.view(B, -1)
         x = F.relu(self.fc1(x))
-        x = self.bn3(x)   
-
         x = F.relu(self.fc2(x))
-        x = self.bn4(x)   
-        
-        x = self.fc3(x)
-        
+        x = F.relu(self.fc3(x))
+        x = self.fc4(x)
         return x
